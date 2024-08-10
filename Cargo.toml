@@ -1,0 +1,13 @@
+[package]
+name = "rusty-termcolor"
+version = "0.1.1"
+edition = "2021"
+authors = ["buffer"]
+description = "A light-weight terminal coloring library for Rust"
+readme = "README.md"
+homepage = "https://github.com/pleaseful/rusty-termcolor"
+license-file = "LICENSE.md"
+
+[dependencies]
+terminal_size = "0.3.0"
+rand = "0.8.5"
