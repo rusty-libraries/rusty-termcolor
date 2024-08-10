@@ -1,6 +1,6 @@
 [package]
 name = "rusty-termcolor"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["buffer"]
 description = "A light-weight terminal coloring library for Rust"
