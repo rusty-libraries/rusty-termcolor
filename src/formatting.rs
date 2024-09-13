@@ -81,3 +81,65 @@ pub fn box_text(text: &str) -> String {
     result.push_str(&top_bottom.replace("╔", "╚").replace("╗", "╝"));
     result
 }
+
+/// Creates a styled table with borders and cell formatting.
+///
+/// # Arguments
+///
+/// * `headers` - A slice of strings representing the table headers
+/// * `rows` - A vector of vectors of strings representing the table data
+/// * `color` - Optional color for the table borders and headers
+///
+/// # Returns
+///
+/// A String containing the formatted table
+pub fn create_table(headers: &[&str], rows: &Vec<Vec<String>>, color: Option<&Color>) -> String {
+    let column_widths: Vec<usize> = headers
+        .iter()
+        .enumerate()
+        .map(|(i, &header)| {
+            rows.iter()
+                .map(|row| row.get(i).map_or(0, |cell| cell.len()))
+                .max()
+                .unwrap_or(0)
+                .max(header.len())
+        })
+        .collect();
+
+    let mut table = String::new();
+    let color_str = color.map_or(String::new(), |c| c.to_string());
+    let reset_str = color.map_or(String::new(), |_| crate::colors::RESET.to_string());
+
+    // Top border
+    table.push_str(&format!("{}╔{}╗{}\n", color_str, column_widths.iter().map(|&w| "═".repeat(w + 2)).collect::<Vec<_>>().join("╦"), reset_str));
+
+    // Headers
+    table.push_str(&format!("{}║ ", color_str));
+    for (i, header) in headers.iter().enumerate() {
+        table.push_str(&format!("{:<width$} ", header, width = column_widths[i]));
+        if i < headers.len() - 1 {
+            table.push_str("│ ");
+        }
+    }
+    table.push_str(&format!("║{}\n", reset_str));
+
+    // Separator
+    table.push_str(&format!("{}╠{}╣{}\n", color_str, column_widths.iter().map(|&w| "═".repeat(w + 2)).collect::<Vec<_>>().join("╬"), reset_str));
+
+    // Rows
+    for row in rows {
+        table.push_str(&format!("{}║ ", color_str));
+        for (i, cell) in row.iter().enumerate() {
+            table.push_str(&format!("{:<width$} ", cell, width = column_widths[i]));
+            if i < row.len() - 1 {
+                table.push_str("│ ");
+            }
+        }
+        table.push_str(&format!("║{}\n", reset_str));
+    }
+
+    // Bottom border
+    table.push_str(&format!("{}╚{}╝{}\n", color_str, column_widths.iter().map(|&w| "═".repeat(w + 2)).collect::<Vec<_>>().join("╩"), reset_str));
+
+    table
+}

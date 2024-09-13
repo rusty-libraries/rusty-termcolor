@@ -2,7 +2,7 @@ use std::io::{self, Write};
 use std::thread;
 use std::time::Duration;
 use rand::Rng;
-use crate::colors::Color;
+use crate::colors::{Color, RESET};
 
 /// Struct to hold settings for various text effects.
 pub struct EffectSettings {
@@ -40,7 +40,7 @@ pub fn typewriter(text: &str, settings: &EffectSettings, color: Option<&Color>) 
         thread::sleep(Duration::from_millis(settings.delay));
     }
     if color.is_some() {
-        print!("{}", crate::colors::RESET);
+        print!("{}", RESET);
     }
     io::stdout().flush().unwrap();
 }
@@ -61,7 +61,7 @@ pub fn loading_bar(total: usize, settings: &EffectSettings, color: &Color) {
                "",
                i,
                total,
-               crate::colors::RESET,
+               RESET,
                progress = progress,
                remaining = settings.width - progress);
         io::stdout().flush().unwrap();
@@ -102,7 +102,7 @@ pub fn wiggle(text: &str, settings: &EffectSettings, color: Option<&Color>) {
     }
 
     if color.is_some() {
-        print!("{}", crate::colors::RESET);
+        print!("{}", RESET);
     }
     println!();
     io::stdout().flush().unwrap();
@@ -141,8 +141,64 @@ pub fn matrix_effect(text: &str, settings: &EffectSettings, color: Option<&Color
     }
 
     if color.is_some() {
-        print!("{}", crate::colors::RESET);
+        print!("{}", RESET);
     }
     println!();
     io::stdout().flush().unwrap();
+}
+
+/// Displays text with a rainbow effect.
+///
+/// # Arguments
+///
+/// * `text` - The text to display
+/// * `settings` - EffectSettings for customization
+pub fn rainbow_text(text: &str, settings: &EffectSettings) {
+    let colors = [
+        Color::new(255, 0, 0),    // Red
+        Color::new(255, 127, 0),  // Orange
+        Color::new(255, 255, 0),  // Yellow
+        Color::new(0, 255, 0),    // Green
+        Color::new(0, 0, 255),    // Blue
+        Color::new(75, 0, 130),   // Indigo
+        Color::new(143, 0, 255),  // Violet
+    ];
+
+    for _ in 0..settings.iterations {
+        for i in 0..colors.len() {
+            let mut colored_text = String::new();
+            for (j, c) in text.chars().enumerate() {
+                let color_index = (i + j) % colors.len();
+                colored_text.push_str(&format!("{}{}", colors[color_index], c));
+            }
+            print!("\r{}{}", colored_text, RESET);
+            io::stdout().flush().unwrap();
+            thread::sleep(Duration::from_millis(settings.delay));
+        }
+    }
+    println!();
+}
+
+/// Displays a progress spinner with customizable styles.
+///
+/// # Arguments
+///
+/// * `total` - Total number of steps in the process
+/// * `settings` - EffectSettings for customization
+/// * `color` - Color for the spinner
+/// * `style` - Style of the spinner (0: default, 1: dots, 2: arrows)
+pub fn progress_spinner(total: usize, settings: &EffectSettings, color: &Color, style: usize) {
+    let spinner_chars = match style {
+        1 => vec!['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
+        2 => vec!['←', '↖', '↑', '↗', '→', '↘', '↓', '↙'],
+        _ => vec!['|', '/', '-', '\\'],
+    };
+
+    for i in 0..=total {
+        let spinner_char = spinner_chars[i % spinner_chars.len()];
+        print!("\r{}{} {}/{}", color, spinner_char, i, total);
+        io::stdout().flush().unwrap();
+        thread::sleep(Duration::from_millis(settings.delay));
+    }
+    println!("{}", RESET);
 }

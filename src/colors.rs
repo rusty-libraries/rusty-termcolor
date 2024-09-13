@@ -15,6 +15,10 @@ impl Color {
     /// * `r` - Red component (0-255)
     /// * `g` - Green component (0-255)
     /// * `b` - Blue component (0-255)
+    ///
+    /// # Returns
+    ///
+    /// A new Color instance.
     pub fn new(r: u8, g: u8, b: u8) -> Self {
         Color { r, g, b }
     }
@@ -26,6 +30,16 @@ impl Color {
     /// A tuple containing the (red, green, blue) components.
     pub fn rgb(&self) -> (u8, u8, u8) {
         (self.r, self.g, self.b)
+    }
+
+    /// Converts the Color to a 256-color code.
+    ///
+    /// # Returns
+    ///
+    /// A u8 representing the closest 256-color code.
+    pub fn to_256_color(&self) -> u8 {
+        let (r, g, b) = self.rgb();
+        16 + 36 * (r as u16 * 5 / 255) as u8 + 6 * (g as u16 * 5 / 255) as u8 + (b as u16 * 5 / 255) as u8
     }
 }
 
@@ -71,4 +85,36 @@ pub fn fade_color(start: &Color, end: &Color, steps: usize) -> Vec<Color> {
         let b = (b1 as f32 * (1.0 - t) + b2 as f32 * t) as u8;
         Color::new(r, g, b)
     }).collect()
+}
+
+/// Returns a random aesthetically pleasing color.
+///
+/// # Returns
+///
+/// A random Color instance.
+pub fn random_pleasing_color() -> Color {
+    use rand::Rng;
+    let mut rng = rand::thread_rng();
+    let hue = rng.gen_range(0..360) as f32;
+    let saturation = rng.gen_range(70..100) as f32 / 100.0;
+    let value = rng.gen_range(70..100) as f32 / 100.0;
+    
+    let c = value * saturation;
+    let x = c * (1.0 - ((hue / 60.0) % 2.0 - 1.0).abs());
+    let m = value - c;
+
+    let (r, g, b) = match (hue as u16) / 60 {
+        0 => (c, x, 0.0),
+        1 => (x, c, 0.0),
+        2 => (0.0, c, x),
+        3 => (0.0, x, c),
+        4 => (x, 0.0, c),
+        _ => (c, 0.0, x),
+    };
+
+    Color::new(
+        ((r + m) * 255.0) as u8,
+        ((g + m) * 255.0) as u8,
+        ((b + m) * 255.0) as u8,
+    )
 }

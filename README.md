@@ -23,7 +23,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rusty-termcolor = "0.1.2"
+rusty-termcolor = "0.1.5"
 ```
 
 ## Features

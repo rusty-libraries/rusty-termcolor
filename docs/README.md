@@ -22,6 +22,7 @@ Represents an RGB color.
 ##### Methods:
 - `new(r: u8, g: u8, b: u8) -> Self` - Creates a new Color instance.
 - `rgb(&self) -> (u8, u8, u8)` - Returns the RGB components as a tuple.
+- `to_256_color(&self) -> u8` - Converts the Color to a 256-color code.
 
 ##### Implementation:
 - `fmt::Display` - Formats the Color as an ANSI escape sequence for terminal output.
@@ -32,6 +33,7 @@ Represents an RGB color.
 
 #### Functions:
 - `fade_color(start: &Color, end: &Color, steps: usize) -> Vec<Color>` - Generates a color gradient between two colors.
+- `random_pleasing_color() -> Color` - Returns a random aesthetically pleasing color.
 
 ### effects
 
@@ -54,6 +56,8 @@ Holds settings for various text effects.
 - `loading_bar(total: usize, settings: &EffectSettings, color: &Color)` - Displays a loading bar effect.
 - `wiggle(text: &str, settings: &EffectSettings, color: Option<&Color>)` - Displays text with a wiggle effect.
 - `matrix_effect(text: &str, settings: &EffectSettings, color: Option<&Color>)` - Displays text with a matrix-like decoding effect.
+- `rainbow_text(text: &str, settings: &EffectSettings)` - Displays text with a rainbow effect.
+- `progress_spinner(total: usize, settings: &EffectSettings, color: &Color, style: usize)` - Displays a progress spinner with customizable styles.
 
 ### formatting
 
@@ -65,8 +69,9 @@ This module provides text formatting utilities.
 - `print_fade(text: &str, colors: &[Color])` - Prints text with a color gradient effect.
 - `center_text(text: &str) -> String` - Centers text based on the terminal width.
 - `box_text(text: &str) -> String` - Surrounds text with a box made of Unicode box-drawing characters.
+- `create_table(headers: &[&str], rows: &Vec<Vec<String>>, color: Option<&Color>) -> String` - Creates a styled table with borders and cell formatting.
 
-### terminal
+### system
 
 This module provides terminal control functions.
 
@@ -81,7 +86,7 @@ This module provides terminal control functions.
 ```rust
 use rusty_termcolor::{
     colors::*, formatting::*, effects::*, system::*,
-    Color, fade_color,
+    Color, fade_color, random_pleasing_color,
 };
 use std::{thread, time::Duration};
 use rusty_termcolor::styles::banners::{create_banner, Position};
@@ -102,6 +107,10 @@ fn main() {
     // Fade effect
     let fade_colors = fade_color(&BLUE, &GREEN, 10);
     print_fade("This text fades from blue to green\n", &fade_colors);
+    thread::sleep(Duration::from_secs(1));
+
+    // Rainbow text effect (new feature)
+    rainbow_text("This text is a rainbow!", &default_settings);
     thread::sleep(Duration::from_secs(1));
 
     // Typewriter effect
@@ -125,7 +134,6 @@ fn main() {
     println_colored(&boxed_text, &CYAN);
     thread::sleep(Duration::from_secs(1));
 
-
     // Banner
     let ascii_art = r#"
   _____  _    _  _____ _________     __
@@ -145,12 +153,25 @@ fn main() {
     loading_bar(20, &default_settings, &GREEN);
     thread::sleep(Duration::from_secs(1));
 
-    println!("Loading (fast)...");
-    loading_bar(20, &fast_settings, &YELLOW);
+    // Progress spinner (new feature)
+    println!("Processing with spinner...");
+    progress_spinner(20, &default_settings, &BLUE, 0);
     thread::sleep(Duration::from_secs(1));
 
-    println!("Loading (slow)...");
-    loading_bar(20, &slow_settings, &RED);
+    // Random aesthetically pleasing color (new feature)
+    let random_color = random_pleasing_color();
+    println_colored("This text uses a random pleasing color!", &random_color);
+    thread::sleep(Duration::from_secs(1));
+
+    // Styled table (new feature)
+    let headers = vec!["Name", "Age", "City"];
+    let rows = vec![
+        vec!["Alice".to_string(), "28".to_string(), "New York".to_string()],
+        vec!["Bob".to_string(), "35".to_string(), "San Francisco".to_string()],
+        vec!["Charlie".to_string(), "42".to_string(), "London".to_string()],
+    ];
+    let table = create_table(&headers, &rows, Some(&CYAN));
+    println!("{}", table);
     thread::sleep(Duration::from_secs(1));
 
     // Hide and show cursor
@@ -159,10 +180,6 @@ fn main() {
     thread::sleep(Duration::from_secs(2));
     show_cursor();
     println!("The cursor is now visible again.");
-
-    // Custom color
-    let custom_color = Color::new(100, 150, 200);
-    println_colored("This text uses a custom color!", &custom_color);
 
     // Showcase different speeds for effects
     println!("\nShowcasing different speeds for effects:");
@@ -196,10 +213,11 @@ fn main() {
 - Some functions use ANSI escape codes, which may not be supported on all terminals or operating systems.
 - The effectiveness of visual effects may vary depending on the terminal emulator and system configuration.
 - It's recommended to use `show_cursor()` before exiting the program if `hide_cursor()` was used.
+- The new features (rainbow text, progress spinner, random pleasing color, and styled table) provide additional options for terminal-based user interfaces and text formatting.
 
 ## Dependencies
 
 - `std::io` for terminal I/O operations.
 - `std::thread` and `std::time::Duration` for timing in effects.
-- `rand` crate for random number generation in some effects.
+- `rand` crate for random number generation in some effects and color generation.
 - `terminal_size` crate for getting terminal dimensions.
