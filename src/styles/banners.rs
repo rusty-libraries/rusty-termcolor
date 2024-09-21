@@ -44,8 +44,8 @@ impl<'a, 'b> Banner<'a, 'b> {
     ///
     /// A String containing the rendered banner.
     pub fn render(&self) -> String {
-        let ascii_lines: Vec<&str> = self.ascii_art.lines().collect();
-        let text_lines: Vec<&str> = self.text.lines().collect();
+        let ascii_lines = self.ascii_art.lines().collect::<Vec<_>>();
+        let text_lines = self.text.lines().collect::<Vec<_>>();
 
         let ascii_width = ascii_lines.iter().map(|line| line.len()).max().unwrap_or(0);
 

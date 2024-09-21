@@ -77,7 +77,7 @@ pub fn loading_bar(total: usize, settings: &EffectSettings, color: &Color) {
 /// * `settings` - [`EffectSettings`] for customization
 /// * `color` - Optional [`Color`] for the text
 pub fn wiggle(text: &str, settings: &EffectSettings, color: Option<&Color>) {
-    let chars: Vec<char> = text.chars().collect();
+    let chars = text.chars().collect::<Vec<_>>();
     let len = chars.len();
 
     for _ in 0..settings.iterations {
@@ -123,7 +123,7 @@ pub fn wiggle(text: &str, settings: &EffectSettings, color: Option<&Color>) {
 /// * `color` - Optional [`Color`] for the text
 pub fn matrix_effect(text: &str, settings: &EffectSettings, color: Option<&Color>) {
     let mut rng = rand::thread_rng();
-    let chars: Vec<char> = text.chars().collect();
+    let chars = text.chars().collect::<Vec<_>>();
     let symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
     for _ in 0..settings.iterations {

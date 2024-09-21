@@ -30,7 +30,7 @@ pub fn println_colored(text: &str, color: &Color) {
 /// * `text` - The text to print
 /// * `colors` - An array of colors to use for the gradient
 pub fn print_fade(text: &str, colors: &[Color]) {
-    let chars: Vec<char> = text.chars().collect();
+    let chars = text.chars().collect::<Vec<_>>();
     let color_count = colors.len();
 
     for (i, c) in chars.iter().enumerate() {
@@ -69,7 +69,7 @@ pub fn center_text(text: &str) -> String {
 ///
 /// A String containing the text surrounded by a box
 pub fn box_text(text: &str) -> String {
-    let lines: Vec<&str> = text.lines().collect();
+    let lines = text.lines().collect::<Vec<_>>();
     let max_length = lines.iter().map(|line| line.len()).max().unwrap_or(0);
     let top_bottom = format!("╔{}╗", "═".repeat(max_length + 2));
     let mut result = String::new();
@@ -97,7 +97,7 @@ pub fn box_text(text: &str) -> String {
 ///
 /// A String containing the formatted table
 pub fn create_table(headers: &[&str], rows: &Vec<Vec<String>>, color: Option<&Color>) -> String {
-    let column_widths: Vec<usize> = headers
+    let column_widths = headers
         .iter()
         .enumerate()
         .map(|(i, &header)| {
@@ -107,7 +107,7 @@ pub fn create_table(headers: &[&str], rows: &Vec<Vec<String>>, color: Option<&Co
                 .unwrap_or(0)
                 .max(header.len())
         })
-        .collect();
+        .collect::<Vec<_>>();
 
     let mut table = String::new();
     let color_str = color.map_or_else(String::new, |c| c.to_string());
