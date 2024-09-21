@@ -1,6 +1,6 @@
-use crate::colors::Color;
+use crate::colors::{Color, RESET};
 use std::io::{self, Write};
-use terminal_size::{Width, terminal_size};
+use terminal_size::{terminal_size, Width};
 
 /// Prints colored text without a newline.
 ///
@@ -9,7 +9,7 @@ use terminal_size::{Width, terminal_size};
 /// * `text` - The text to print
 /// * `color` - The color to use for the text
 pub fn print_colored(text: &str, color: &Color) {
-    print!("{}{}{}", color, text, crate::colors::RESET);
+    print!("{color}{text}{RESET}");
     io::stdout().flush().unwrap();
 }
 
@@ -20,7 +20,7 @@ pub fn print_colored(text: &str, color: &Color) {
 /// * `text` - The text to print
 /// * `color` - The color to use for the text
 pub fn println_colored(text: &str, color: &Color) {
-    println!("{}{}{}", color, text, crate::colors::RESET);
+    println!("{color}{text}{RESET}");
 }
 
 /// Prints text with a color gradient effect.
@@ -30,14 +30,15 @@ pub fn println_colored(text: &str, color: &Color) {
 /// * `text` - The text to print
 /// * `colors` - An array of colors to use for the gradient
 pub fn print_fade(text: &str, colors: &[Color]) {
-    let chars: Vec<char> = text.chars().collect();
+    let chars = text.chars().collect::<Vec<_>>();
     let color_count = colors.len();
-    
+
     for (i, c) in chars.iter().enumerate() {
         let color_index = (i * color_count) / chars.len();
-        print!("{}{}", colors[color_index], c);
+        print!("{}{c}", colors[color_index]);
     }
-    print!("{}", crate::colors::RESET);
+
+    print!("{RESET}");
     io::stdout().flush().unwrap();
 }
 
@@ -51,7 +52,9 @@ pub fn print_fade(text: &str, colors: &[Color]) {
 ///
 /// A String containing the centered text
 pub fn center_text(text: &str) -> String {
-    let width = terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(80);
+    let width = terminal_size()
+        .map(|(Width(w), _)| w as usize)
+        .unwrap_or(80);
     let padding = (width - text.len()) / 2;
     format!("{:>width$}", text, width = padding + text.len())
 }
@@ -66,7 +69,7 @@ pub fn center_text(text: &str) -> String {
 ///
 /// A String containing the text surrounded by a box
 pub fn box_text(text: &str) -> String {
-    let lines: Vec<&str> = text.lines().collect();
+    let lines = text.lines().collect::<Vec<_>>();
     let max_length = lines.iter().map(|line| line.len()).max().unwrap_or(0);
     let top_bottom = format!("╔{}╗", "═".repeat(max_length + 2));
     let mut result = String::new();
@@ -87,14 +90,14 @@ pub fn box_text(text: &str) -> String {
 /// # Arguments
 ///
 /// * `headers` - A slice of strings representing the table headers
-/// * `rows` - A vector of vectors of strings representing the table data
+/// * `rows` - A [`Vec`] of [`Vec`]s of strings representing the table data
 /// * `color` - Optional color for the table borders and headers
 ///
 /// # Returns
 ///
 /// A String containing the formatted table
 pub fn create_table(headers: &[&str], rows: &Vec<Vec<String>>, color: Option<&Color>) -> String {
-    let column_widths: Vec<usize> = headers
+    let column_widths = headers
         .iter()
         .enumerate()
         .map(|(i, &header)| {
@@ -104,42 +107,63 @@ pub fn create_table(headers: &[&str], rows: &Vec<Vec<String>>, color: Option<&Co
                 .unwrap_or(0)
                 .max(header.len())
         })
-        .collect();
+        .collect::<Vec<_>>();
 
     let mut table = String::new();
-    let color_str = color.map_or(String::new(), |c| c.to_string());
-    let reset_str = color.map_or(String::new(), |_| crate::colors::RESET.to_string());
+    let color_str = color.map_or_else(String::new, |c| c.to_string());
+    let reset_str = color.map_or("", |_| crate::colors::RESET);
 
     // Top border
-    table.push_str(&format!("{}╔{}╗{}\n", color_str, column_widths.iter().map(|&w| "═".repeat(w + 2)).collect::<Vec<_>>().join("╦"), reset_str));
+    table.push_str(&format!(
+        "{color_str}╔{}╗{reset_str}\n",
+        column_widths
+            .iter()
+            .map(|&w| "═".repeat(w + 2))
+            .collect::<Vec<_>>()
+            .join("╦")
+    ));
 
     // Headers
-    table.push_str(&format!("{}║ ", color_str));
+    table.push_str(&format!("{color_str}║ "));
     for (i, header) in headers.iter().enumerate() {
         table.push_str(&format!("{:<width$} ", header, width = column_widths[i]));
         if i < headers.len() - 1 {
             table.push_str("│ ");
         }
     }
-    table.push_str(&format!("║{}\n", reset_str));
+    table.push_str(&format!("║{reset_str}\n"));
 
     // Separator
-    table.push_str(&format!("{}╠{}╣{}\n", color_str, column_widths.iter().map(|&w| "═".repeat(w + 2)).collect::<Vec<_>>().join("╬"), reset_str));
+    table.push_str(&format!(
+        "{color_str}╠{}╣{reset_str}\n",
+        column_widths
+            .iter()
+            .map(|&w| "═".repeat(w + 2))
+            .collect::<Vec<_>>()
+            .join("╬")
+    ));
 
     // Rows
     for row in rows {
-        table.push_str(&format!("{}║ ", color_str));
+        table.push_str(&format!("{color_str}║ "));
         for (i, cell) in row.iter().enumerate() {
             table.push_str(&format!("{:<width$} ", cell, width = column_widths[i]));
             if i < row.len() - 1 {
                 table.push_str("│ ");
             }
         }
-        table.push_str(&format!("║{}\n", reset_str));
+        table.push_str(&format!("║{reset_str}\n"));
     }
 
     // Bottom border
-    table.push_str(&format!("{}╚{}╝{}\n", color_str, column_widths.iter().map(|&w| "═".repeat(w + 2)).collect::<Vec<_>>().join("╩"), reset_str));
+    table.push_str(&format!(
+        "{color_str}╚{}╝{reset_str}\n",
+        column_widths
+            .iter()
+            .map(|&w| "═".repeat(w + 2))
+            .collect::<Vec<_>>()
+            .join("╩")
+    ));
 
     table
 }

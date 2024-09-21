@@ -6,8 +6,11 @@ authors = ["buffer"]
 description = "A light-weight terminal coloring library for Rust"
 readme = "README.md"
 homepage = "https://github.com/pleaseful/rusty-termcolor"
+keywords = ["console", "color", "print", "println", "terminal"]
+categories = ["command-line-utilities"]
+exclude = ["docs/", "rustfmt.toml"]
 license-file = "LICENSE.md"
 
 [dependencies]
-terminal_size = "0.3.0"
-rand = "0.8.5"
+terminal_size = "0.3"
+rand = "0.8"
