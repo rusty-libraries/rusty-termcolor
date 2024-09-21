@@ -46,6 +46,27 @@ impl Color {
     }
 }
 
+impl From<(u8, u8, u8)> for Color {
+    #[inline(always)]
+    fn from((r, g, b): (u8, u8, u8)) -> Self {
+        Self::new(r, g, b)
+    }
+}
+
+impl From<Color> for (u8, u8, u8) {
+    #[inline(always)]
+    fn from(color: Color) -> Self {
+        color.rgb()
+    }
+}
+
+impl From<Color> for u8 {
+    #[inline(always)]
+    fn from(color: Color) -> Self {
+        color.to_256_color()
+    }
+}
+
 impl fmt::Display for Color {
     /// Formats the [`Color`] as an ANSI escape sequence for terminal output.
     #[inline(always)]
