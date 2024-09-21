@@ -12,5 +12,5 @@ exclude = ["rustfmt.toml"]
 license-file = "LICENSE.md"
 
 [dependencies]
-terminal_size = "0.3.0"
-rand = "0.8.5"
+terminal_size = "0.3"
+rand = "0.8"
