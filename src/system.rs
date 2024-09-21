@@ -14,7 +14,7 @@ pub fn clear_screen() {
 /// * `title` - The string to set as the terminal window title
 pub fn set_title(title: &str) {
     // ANSI escape code to set terminal title
-    print!("\x1B]0;{}\x07", title);
+    print!("\x1B]0;{title}\x07");
     io::stdout().flush().unwrap();
 }
 

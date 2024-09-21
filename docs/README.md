@@ -171,7 +171,7 @@ fn main() {
         vec!["Charlie".to_string(), "42".to_string(), "London".to_string()],
     ];
     let table = create_table(&headers, &rows, Some(&CYAN));
-    println!("{}", table);
+    println!("{table}");
     thread::sleep(Duration::from_secs(1));
 
     // Hide and show cursor
