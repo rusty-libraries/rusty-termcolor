@@ -16,7 +16,7 @@ pub enum Position {
 }
 
 impl Banner {
-    /// Creates a new Banner instance.
+    /// Creates a new [`Banner`] instance.
     ///
     /// # Arguments
     ///

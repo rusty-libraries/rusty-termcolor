@@ -90,7 +90,7 @@ pub fn box_text(text: &str) -> String {
 /// # Arguments
 ///
 /// * `headers` - A slice of strings representing the table headers
-/// * `rows` - A vector of vectors of strings representing the table data
+/// * `rows` - A [`Vec`] of [`Vec`]s of strings representing the table data
 /// * `color` - Optional color for the table borders and headers
 ///
 /// # Returns

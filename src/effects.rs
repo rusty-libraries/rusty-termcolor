@@ -28,8 +28,8 @@ impl Default for EffectSettings {
 /// # Arguments
 ///
 /// * `text` - The text to display
-/// * `settings` - EffectSettings for customization
-/// * `color` - Optional color for the text
+/// * `settings` - [`EffectSettings`] for customization
+/// * `color` - Optional [`Color`] for the text
 pub fn typewriter(text: &str, settings: &EffectSettings, color: Option<&Color>) {
     for c in text.chars() {
         if let Some(col) = color {
@@ -51,8 +51,8 @@ pub fn typewriter(text: &str, settings: &EffectSettings, color: Option<&Color>) 
 /// # Arguments
 ///
 /// * `total` - Total number of steps in the loading process
-/// * `settings` - EffectSettings for customization
-/// * `color` - Color for the loading bar
+/// * `settings` - [`EffectSettings`] for customization
+/// * `color` - [`Color`] for the loading bar
 pub fn loading_bar(total: usize, settings: &EffectSettings, color: &Color) {
     for i in 0..=total {
         let progress = (i as f32 / total as f32 * settings.width as f32) as usize;
@@ -74,8 +74,8 @@ pub fn loading_bar(total: usize, settings: &EffectSettings, color: &Color) {
 /// # Arguments
 ///
 /// * `text` - The text to display
-/// * `settings` - EffectSettings for customization
-/// * `color` - Optional color for the text
+/// * `settings` - [`EffectSettings`] for customization
+/// * `color` - Optional [`Color`] for the text
 pub fn wiggle(text: &str, settings: &EffectSettings, color: Option<&Color>) {
     let chars: Vec<char> = text.chars().collect();
     let len = chars.len();
@@ -112,8 +112,8 @@ pub fn wiggle(text: &str, settings: &EffectSettings, color: Option<&Color>) {
 /// # Arguments
 ///
 /// * `text` - The text to display
-/// * `settings` - EffectSettings for customization
-/// * `color` - Optional color for the text
+/// * `settings` - [`EffectSettings`] for customization
+/// * `color` - Optional [`Color`] for the text
 pub fn matrix_effect(text: &str, settings: &EffectSettings, color: Option<&Color>) {
     let mut rng = rand::thread_rng();
     let chars: Vec<char> = text.chars().collect();
@@ -156,7 +156,7 @@ pub fn matrix_effect(text: &str, settings: &EffectSettings, color: Option<&Color
 /// # Arguments
 ///
 /// * `text` - The text to display
-/// * `settings` - EffectSettings for customization
+/// * `settings` - [`EffectSettings`] for customization
 pub fn rainbow_text(text: &str, settings: &EffectSettings) {
     let colors = [
         Color::new(255, 0, 0),   // Red
@@ -188,8 +188,8 @@ pub fn rainbow_text(text: &str, settings: &EffectSettings) {
 /// # Arguments
 ///
 /// * `total` - Total number of steps in the process
-/// * `settings` - EffectSettings for customization
-/// * `color` - Color for the spinner
+/// * `settings` - [`EffectSettings`] for customization
+/// * `color` - [`Color`] for the spinner
 /// * `style` - Style of the spinner (0: default, 1: dots, 2: arrows)
 pub fn progress_spinner(total: usize, settings: &EffectSettings, color: &Color, style: usize) {
     let spinner_chars = match style {

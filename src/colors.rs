@@ -9,7 +9,7 @@ pub struct Color {
 }
 
 impl Color {
-    /// Creates a new Color instance.
+    /// Creates a new [`Color`] instance.
     ///
     /// # Arguments
     ///
@@ -19,7 +19,7 @@ impl Color {
     ///
     /// # Returns
     ///
-    /// A new Color instance.
+    /// A new [`Color`] instance.
     pub const fn new(r: u8, g: u8, b: u8) -> Self {
         Self { r, g, b }
     }
@@ -33,7 +33,7 @@ impl Color {
         (self.r, self.g, self.b)
     }
 
-    /// Converts the Color to a 256-color code.
+    /// Converts the [`Color`] to a 256-color code.
     ///
     /// # Returns
     ///
@@ -47,7 +47,7 @@ impl Color {
 }
 
 impl fmt::Display for Color {
-    /// Formats the Color as an ANSI escape sequence for terminal output.
+    /// Formats the [`Color`] as an ANSI escape sequence for terminal output.
     #[inline(always)]
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "\x1B[38;2;{};{};{}m", self.r, self.g, self.b)
@@ -93,7 +93,7 @@ pub const RESET: &str = "\x1B[0m";
 ///
 /// # Returns
 ///
-/// A vector of Colors representing the gradient from start to end.
+/// A [`Vec`] of [`Color`]s representing the gradient from start to end.
 pub fn fade_color(start: &Color, end: &Color, steps: usize) -> Vec<Color> {
     let (r1, g1, b1) = start.rgb();
     let (r2, g2, b2) = end.rgb();
@@ -113,7 +113,7 @@ pub fn fade_color(start: &Color, end: &Color, steps: usize) -> Vec<Color> {
 ///
 /// # Returns
 ///
-/// A random Color instance.
+/// A random [`Color`] instance.
 pub fn random_pleasing_color() -> Color {
     let mut rng = rand::thread_rng();
     let hue = rng.gen_range(0..360) as f32;
