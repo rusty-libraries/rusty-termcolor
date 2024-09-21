@@ -8,7 +8,7 @@ readme = "README.md"
 homepage = "https://github.com/pleaseful/rusty-termcolor"
 keywords = ["console", "color", "print", "println", "terminal"]
 categories = ["command-line-utilities"]
-exclude = ["rustfmt.toml"]
+exclude = ["docs/", "rustfmt.toml"]
 license-file = "LICENSE.md"
 
 [dependencies]
