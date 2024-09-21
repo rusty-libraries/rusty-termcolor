@@ -82,14 +82,21 @@ pub fn wiggle(text: &str, settings: &EffectSettings, color: Option<&Color>) {
 
     for _ in 0..settings.iterations {
         for i in 0..len {
-            let mut line = String::new();
-            for (j, &c) in chars.iter().enumerate() {
-                if j == i {
-                    line.push(c.to_uppercase().next().unwrap_or(c));
-                } else {
-                    line.push(c.to_lowercase().next().unwrap_or(c));
-                }
-            }
+            let line = chars
+                .iter()
+                .enumerate()
+                .map(|(j, &c)| {
+                    {
+                        if j == i {
+                            c.to_uppercase().next()
+                        } else {
+                            c.to_lowercase().next()
+                        }
+                    }
+                    .unwrap_or(c)
+                })
+                .collect::<String>();
+
             if let Some(col) = color {
                 print!("\r{col}{line}");
             } else {
@@ -121,19 +128,21 @@ pub fn matrix_effect(text: &str, settings: &EffectSettings, color: Option<&Color
 
     for _ in 0..settings.iterations {
         for i in 0..chars.len() {
-            let mut line = String::new();
-            for (j, &c) in chars.iter().enumerate() {
-                if j <= i {
-                    line.push(c);
-                } else {
-                    line.push(
+            let line = chars
+                .iter()
+                .enumerate()
+                .map(|(j, &c)| {
+                    if j <= i {
+                        c
+                    } else {
                         symbols
                             .chars()
                             .nth(rng.gen_range(0..symbols.len()))
-                            .unwrap(),
-                    );
-                }
-            }
+                            .unwrap()
+                    }
+                })
+                .collect::<String>();
+
             if let Some(col) = color {
                 print!("\r{col}{line}");
             } else {
