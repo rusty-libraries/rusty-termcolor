@@ -111,7 +111,7 @@ pub fn create_table(headers: &[&str], rows: &Vec<Vec<String>>, color: Option<&Co
 
     let mut table = String::new();
     let color_str = color.map_or_else(String::new, |c| c.to_string());
-    let reset_str = color.map_or_else(String::new, |_| crate::colors::RESET.to_string());
+    let reset_str = color.map_or("", |_| crate::colors::RESET);
 
     // Top border
     table.push_str(&format!(
