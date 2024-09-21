@@ -1,11 +1,11 @@
 use crate::formatting::center_text;
 
 /// Represents a banner with ASCII art and text.
-pub struct Banner {
-    ascii_art: String,  // The ASCII art to be displayed
-    text: String,       // The text to be displayed alongside the ASCII art
-    padding: usize,     // The amount of padding between ASCII art and text
-    position: Position, // The position of the text relative to the ASCII art
+pub struct Banner<'a, 'b> {
+    ascii_art: &'a str,  // The ASCII art to be displayed
+    text: &'b str,       // The text to be displayed alongside the ASCII art
+    padding: usize,      // The amount of padding between ASCII art and text
+    position: Position,  // The position of the text relative to the ASCII art
 }
 
 /// Enum representing the possible positions of the text relative to the ASCII art.
@@ -15,7 +15,7 @@ pub enum Position {
     Bottom,
 }
 
-impl Banner {
+impl<'a, 'b> Banner<'a, 'b> {
     /// Creates a new [`Banner`] instance.
     ///
     /// # Arguments
@@ -24,10 +24,10 @@ impl Banner {
     /// * `text` - The text to be displayed alongside the ASCII art.
     /// * `padding` - The amount of padding between ASCII art and text.
     /// * `position` - The position of the text relative to the ASCII art.
-    pub fn new(ascii_art: &str, text: &str, padding: usize, position: Position) -> Self {
+    pub const fn new(ascii_art: &'a str, text: &'b str, padding: usize, position: Position) -> Self {
         Self {
-            ascii_art: ascii_art.to_string(),
-            text: text.to_string(),
+            ascii_art,
+            text,
             padding,
             position,
         }
