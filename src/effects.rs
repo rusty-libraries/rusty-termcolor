@@ -215,3 +215,32 @@ pub fn progress_spinner(total: usize, settings: &EffectSettings, color: &Color, 
     }
     println!("{RESET}");
 }
+
+/// Displays text with a slide-in effect from the left.
+///
+/// # Arguments
+///
+/// * `text` - The text to display
+/// * `settings` - [`EffectSettings`] for customization
+/// * `color` - Optional [`Color`] for the text
+pub fn slide_in(text: &str, settings: &EffectSettings, color: Option<&Color>) {
+    let width = text.len();
+    
+    for i in 0..=width {
+        let spaces = " ".repeat(width - i);
+        let visible = &text[..i];
+        
+        if let Some(col) = color {
+            print!("\r{col}{spaces}{visible}");
+        } else {
+            print!("\r{spaces}{visible}");
+        }
+        io::stdout().flush().unwrap();
+        thread::sleep(Duration::from_millis(settings.delay));
+    }
+    
+    if color.is_some() {
+        print!("{RESET}");
+    }
+    println!();
+}
