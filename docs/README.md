@@ -58,6 +58,7 @@ Holds settings for various text effects.
 - `matrix_effect(text: &str, settings: &EffectSettings, color: Option<&Color>)` - Displays text with a matrix-like decoding effect.
 - `rainbow_text(text: &str, settings: &EffectSettings)` - Displays text with a rainbow effect.
 - `progress_spinner(total: usize, settings: &EffectSettings, color: &Color, style: usize)` - Displays a progress spinner with customizable styles.
+- `slide_in(text: &str, settings: &EffectSettings, color: Option<&Color>)` - Displays text with a slide-in effect from the left.
 
 ### formatting
 
