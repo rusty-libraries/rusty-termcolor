@@ -182,6 +182,11 @@ fn main() {
     show_cursor();
     println!("The cursor is now visible again.");
 
+    // Slide-in effect
+    println!("\nSlide-in effect:");
+    slide_in("This text slides in from the left", &default_settings, Some(&CYAN));
+    thread::sleep(Duration::from_secs(1));
+
     // Showcase different speeds for effects
     println!("\nShowcasing different speeds for effects:");
 
@@ -202,6 +207,12 @@ fn main() {
 
     println!("\nMatrix (slow):");
     matrix_effect("Slow matrix effect", &slow_settings, Some(&MAGENTA));
+
+    println!("\nSlide-in (fast):");
+    slide_in("Fast slide-in effect", &fast_settings, Some(&GREEN));
+
+    println!("\nSlide-in (slow):");
+    slide_in("Slow slide-in effect", &slow_settings, Some(&YELLOW));
 
     println!("\nDemo completed. Press Enter to exit.");
     let mut _input = String::new();
